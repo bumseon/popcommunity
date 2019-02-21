@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+    아이디 <input type="text" name="user_id"><br>
+    비밀번호 <input type="password" name="user_pwd"><br>
+    <input type="checkbox" name="save_id" value="false">아이디 저장
+    <br>
+    <input type="button" value="아이디 찾기" name="find_id" onclick="find_id()">
+    <input type="button" value="비밀번호 찾기" name="find_pwd" onclick="find_pwd()">
+    <br>
+    <input type="submit" value="로그인">
+
+</form>
+</body>
+
+
+<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+    $('input:submit').click(function(){
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: $('form').serialize(),
+            success: function(result){
+                alert(result)
+                if(result == '로그인 완료'){
+                    html = '<h3>로그인 되었습니다.</h3><br><h5><a href="{% url 'main'%}">홈으로 이동</a></h5>'
+                    $('form').after(html)
+                    $('form').remove()
+                }
+                else{
+                    html = '<h3>다시 로그인 해주세요</h3>'
+                    $('form').after(html)
+                    }
+            }
+        })
+        return false
+    })
+</script>
+
+</html>

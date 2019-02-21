@@ -1,0 +1,27 @@
+{% load i18n static %}
+
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html>
+    <head>
+        <meta charest="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <!-- bootstrap 사용하기 위한 문장 // 반응형 웹페이지 지원-->
+        <link rel="stylesheet" href="{% static 'cms/css/bootstrap.min.css'%}">
+        
+        {% block extra_css %}{% endblock %}
+        <title>{% block title %}My Books{% endblock %}</title>
+    </head>
+
+    <body>
+        <div class="container">
+            {% block content %}        
+                {{ content }}
+            {% endblock %}
+        </div>
+    <script src="{% static 'cms/js/jquery-3.3.1.js'%}"></script>
+    <script src="{% static 'cms/js/bootstrap.bundle.min.js'%}"></script>
+    {% block extra_js %}{% endblock %}
+    
+    </body>
+
+</html>

@@ -1,0 +1,129 @@
+﻿{% load staticfiles %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Login </title>
+	<!-- BOOTSTRAP STYLES-->
+    {% comment %} <link href="{% static 'mainapp/css/bootstrap.css'%}" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="{% static 'mainapp/css/font-awesome.css'%}" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+    <link href="{% static 'mainapp/css/custom.css'%}" rel="stylesheet" />
+     <!-- GOOGLE FONTS--> {% endcomment %}
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <meta http-equiv="content-type" content="text/html;">
+    <link rel="canonical" href="">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div id="wrapper">
+
+        <div class="nav-wrapper">
+            <div class="container">
+                
+                <nav class="navbar navbar-default navbar-inverse" role="navigation">
+                  <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                    <a href="{% url 'main' %}" class="navbar-brand">POP COMMUNITY</a>
+                    </div>
+                  </div><!-- /.container-fluid -->
+                </nav>
+
+            </div>
+            <!-- /.container -->
+        </div>
+    </div>
+    <div class="container">
+        <div class="row text-center ">
+            <div class="col-md-12">
+                <br /><br />
+
+                 <br />
+            </div>
+        </div>
+         <div class="row ">
+               
+                  <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                        <strong>로그인</strong>  
+                            </div>
+                            <div class="panel-body">
+                                <form role="form">
+                                       <br />
+                                       {% csrf_token %}
+                                     <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-tag"  ></i></span>
+                                            <input type="text" class="form-control" placeholder="아이디" name="user_id" />
+                                        </div>
+                                                                              <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-lock"  ></i></span>
+                                            <input type="password" class="form-control"  placeholder="비밀번호" name="user_pwd" />
+                                        </div>
+                                    <div class="form-group">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" /> 아이디 저장
+                                            </label>
+                                            <span class="pull-right">
+                                                <a href="{% url 'find_pwd' %}">비밀번호 찾기</a>
+                                            </span>
+                                        </div>
+                                        <div class="pull-right">
+                                         <input type="submit" class="btn btn-success" value="로그인">
+                                         <a href="{% url 'main' %}" ><input type="button" class="btn btn-primary" value="홈으로"></a>
+                                         </div>
+                                    </br>
+                                    <hr />
+                                    아직 회원이 아니신가요 ? <a href="{% url 'join_agree' %}">회원가입</a> 
+                                    </form>
+                            </div>
+                           
+                        </div>
+                    </div>
+                
+                
+        </div>
+    </div>
+
+
+     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="{% static 'mainapp/js/jquery-1.10.2.js'%}"></script>
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="{% static 'mainapp/js/bootstrap.min.js'%}"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="{% static 'mainapp/js/jquery.metisMenu.js'%}"></script>
+      <!-- CUSTOM SCRIPTS -->
+    {% comment %} <script src="{% static 'mainapp/js/custom.js'%}"></script> {% endcomment %}
+
+<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+    $('input:submit').click(function(){
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: $('form').serialize(),
+            success: function(result){
+                alert(result)
+                if(result == '로그인 완료'){
+                    html = '<h3>로그인 되었습니다.</h3><br><h5><a href="{% url 'main'%}">홈으로 이동</a></h5>'
+                    $('form').after(html)
+                    $('form').remove()
+                }
+                else{
+                    html = '<h2>다시 로그인 해주세요</h2>'
+                    $('form').after(html)
+                    }
+            }
+        })
+        return false
+    })
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,180 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> POP Community 회원가입 </title>
+    <link href="{% static 'mainapp/css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body>
+ <div class="page-header">
+          <h1 style="text-align:center">회원가입</h1>
+        </div>
+        <div class="col-md-6 col-md-offset-3">
+          <form role="form" id="form2">
+          {% csrf_token %}
+            <div class="form-group">
+              <label for="username">아이디</label>
+              <input type="text" class="form-control" name="user_id" id="user_id" placeholder="아이디를 입력해 주세요">
+                    <br><input type="button"  class="btn btn-info" value="중복확인" onclick="ID_check()"><br>
+            </div>
+            <div class="form-group">
+              <label for="username">닉네임</label>
+              <input type="text" class="form-control" name="user_nick" id="user_nick" placeholder="닉네임을 입력해 주세요">
+              <br><input type="button" value="중복확인" class="btn btn-info" onclick="nick_check()"><br>
+            </div>
+            <div class="form-group">
+              <label for="InputEmail">이메일 주소</label>
+              <input type="email" class="form-control" name="user_email" id="user_email" placeholder="이메일 주소">
+            </div>
+            <div class="form-group">
+              <label for="InputPassword1">비밀번호</label>
+              <input type="password" class="form-control" name="user_pwd" id="user_pwd" placeholder="비밀번호">
+            </div>
+            <div class="form-group">
+              <label for="InputPassword2">비밀번호 확인</label>
+              <input type="password" class="form-control" name="re_user_pwd" id="re_user_pwd" placeholder="비밀번호 확인">
+              <p class="help-block">비밀번호 확인을 위해 다시한번 입력 해 주세요</p>
+            </div>
+            <div  class="form-group">
+              <tr>
+              <label for="recaptcha">자동가입 방지</label>
+            <div class="g-recaptcha" data-sitekey="6LcYGHgUAAAAAOgg9nE32r6uvW0xGBX657UFdwum"></div>
+              </tr>
+            </div>
+            <div class="form-group text-center">
+              <input type="submit" class="btn btn-info" value="회원가입">
+            </div>
+          </form>
+        </div>
+</body>
+</html>
+
+{% load static %}
+
+<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+
+    var doc = document;
+    var form2 = doc.getElementById('form2');
+    var inputs = form2.getElementsByTagName('INPUT');
+
+    var id_confirm = ''
+    var nick_confirm = ''
+
+
+    //아이디 중복 확인
+
+    function ID_check() {
+        user_id = $('input[name=user_id]').val()
+        ct = $('input[name=csrfmiddlewaretoken]').val()
+        id_confirm = ''
+        $.ajax({
+
+        url:'{% url 'ID_check' %}',
+        type: 'post',
+
+
+        data: {
+            'user_id': user_id,
+            'csrfmiddlewaretoken' : ct,
+            'id_confirm' : id_confirm,
+        },
+
+        success: function(res){
+            alert(res.msg);
+            id_confirm = res.id_confirm
+        }
+
+        })
+    }
+    //닉네임 중복 확인
+        function nick_check() {
+        user_nick = $('input[name=user_nick]').val()
+        ct = $('input[name=csrfmiddlewaretoken]').val()
+        nick_confirm = ''
+
+        $.ajax({
+
+        url:'{% url 'nick_check' %}',
+        type: 'post',
+
+        data: {
+            'user_nick': user_nick,
+            'csrfmiddlewaretoken' : ct,
+            'nick_confirm' : nick_confirm,
+        },
+
+        success: function(res){
+            alert(res.msg);
+            nick_confirm = res.nick_confirm
+        }
+
+        })
+    }
+
+
+	form2.onsubmit = function(e) {
+	    e.preventDefault();
+
+        var user_id = doc.getElementById('user_id').value;
+        var user_nick = doc.getElementById('user_nick').value;
+        var user_email = doc.getElementById('user_email').value;
+        var user_pwd = doc.getElementById('user_pwd').value;
+        var re_user_pwd = doc.getElementById('re_user_pwd').value;
+
+
+	    if (user_pwd != re_user_pwd){ //패스워드 확인
+	        alert('비밀번호를 다시 확인해 주시기 바랍니다.');
+	        return false;
+	    }
+	    if (user_id == ''){                           //내용 미입력시
+	        alert('아이디가 입력되지 않았습니다.');
+	        return false;
+	    }
+	    if (user_nick == ''){
+	        alert('닉네임이 입력되지 않았습니다.');
+	        return false;
+	    }
+	    if (user_email == ''){
+	        alert('이메일이 입력되지 않았습니다.');
+	        return false;
+	    }
+	    if (user_pwd == ''){
+	        alert('비밀번호가 입력되지 않았습니다.');
+	        return false;
+	    }
+	    if (typeof(grecaptcha) != 'undefined') {  //캡챠확인
+            if (grecaptcha.getResponse() == "") {
+            alert("자동가입 방지에 체크해 주세요.");
+            return false;
+            }
+            }
+        if (id_confirm != 'undefined') {  //중복검사확인
+            if (id_confirm == "") {
+            alert("아이디 중복검사를 실시해 주세요.");
+            return false;
+            }
+            }
+        if (nick_confirm != 'undefined') {  //중복검사확인
+            if (nick_confirm == "") {
+            alert("닉네임 중복검사를 실시해 주세요.");
+            return false;
+            }
+            }
+
+        else {
+            return false;
+        }
+
+	    this.submit()
+	}
+
+
+
+
+
+</script>
